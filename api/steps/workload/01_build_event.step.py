@@ -47,6 +47,14 @@ MODEL_LAYOUT = {
     "buddynext": "BuddyNext",
 }
 
+# CLI model -> the -DMODEL= flag accepted by the e2e CMake gate
+# (bb-tests/workloads/src/ModelTest/e2e/models/CMakeLists.txt). Model-side
+# registration only: no chip layout, no ninja run target lives here. Pre-existing
+# models keep their mapping inside bb-tests/workloads/scripts/build.py.
+MODEL_CMAKE = {
+    "distilbert": "distilbert",
+}
+
 
 def chips_for_model(bbdir: str, model_key: str) -> set[str]:
     """Chips that currently ship a layout for this model (many-to-many)."""
