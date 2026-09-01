@@ -29,6 +29,7 @@ from bemu_common import bemu_core_manifest, bemu_manifest, bemu_tile_index, chip
 
 PERFETTO_TARGETS = {
     "buddy-buckyball-lenet-run": "buddy-buckyball-lenet-perfetto",
+    "buddy-buckyball-distilbert-run": "buddy-buckyball-distilbert-perfetto",
 }
 
 config = {
