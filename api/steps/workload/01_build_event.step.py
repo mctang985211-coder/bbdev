@@ -38,6 +38,7 @@ MODEL_LAYOUT = {
     "resnet": "ResNet18",
     "yolo": "YOLO26",
     "bert": "Bert",
+    "distilbert": "DistilBert",
     "qwen3": "Qwen3",
     "gemma4": "Gemma4",
     "deepseekr1": "DeepSeekR1",
@@ -45,6 +46,13 @@ MODEL_LAYOUT = {
     "stable-diffusion": "StableDiffusion",
     "whisper": "Whisper",
     "buddynext": "BuddyNext",
+}
+
+# CLI model → `-DMODEL=` value for the CMake configure of the model-side
+# e2e workloads. Purely additive: a model with no archs layout is built
+# only through its <model>-model-build target, not through a chip pipeline.
+MODEL_CMAKE = {
+    "gpt2": "gpt2",
 }
 
 
