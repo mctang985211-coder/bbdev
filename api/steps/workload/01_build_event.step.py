@@ -49,13 +49,6 @@ MODEL_LAYOUT = {
     "buddynext": "BuddyNext",
 }
 
-# CLI model → `-DMODEL=` value for the CMake configure of the model-side
-# e2e workloads. Purely additive: a model with no archs layout is built
-# only through its <model>-model-build target, not through a chip pipeline.
-MODEL_CMAKE = {
-    "gpt2": "gpt2",
-}
-
 
 def chips_for_model(bbdir: str, model_key: str) -> set[str]:
     """Chips that currently ship a layout for this model (many-to-many)."""
