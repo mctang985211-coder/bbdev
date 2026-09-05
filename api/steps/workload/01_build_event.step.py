@@ -39,6 +39,7 @@ MODEL_LAYOUT = {
     "yolo": "YOLO26",
     "bert": "Bert",
     "distilbert": "DistilBert",
+    "berttiny": "BertTiny",
     "qwen3": "Qwen3",
     "gemma4": "Gemma4",
     "deepseekr1": "DeepSeekR1",
