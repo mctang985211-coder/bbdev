@@ -5,23 +5,32 @@ Workload `--chip <chip> --model <m>` writes under
 Kernel `--model <m>` expects the flat
   bb-tests/output/<chip>/workloads/src/ModelTest/e2e/models/archs/buckyball/<Layout>/
 """
+import importlib.util
 import os
 from pathlib import Path
 
-MODEL_LAYOUT = {
-    "lenet": "LeNet",
-    "mobilenet": "MobileNetV3",
-    "resnet": "ResNet18",
-    "yolo": "YOLO26",
-    "bert": "Bert",
-    "qwen3": "Qwen3",
-    "gemma4": "Gemma4",
-    "deepseekr1": "DeepSeekR1",
-    "llama2": "llama2",
-    "stable-diffusion": "StableDiffusion",
-    "whisper": "Whisper",
-    "buddynext": "BuddyNext",
-}
+
+def _load_workload_step():
+    """Load the workload build step module (the MODEL_LAYOUT single source)."""
+    path = os.path.normpath(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..", "..", "workload", "01_build_event.step.py",
+        )
+    )
+    spec = importlib.util.spec_from_file_location("01_build_event_step", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load workload build step: {path}")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+# Single source of truth: the MODEL_LAYOUT literal lives in the workload build
+# step (api/steps/workload/01_build_event.step.py), the binding write target
+# chips_for_model consumes and chip-audit parses. Mirror the eval step's
+# sibling-import instead of keeping a second literal that drifts.
+MODEL_LAYOUT = _load_workload_step().MODEL_LAYOUT
 
 MODEL_PERFETTO = {
     "lenet": {
