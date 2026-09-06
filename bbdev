@@ -86,8 +86,9 @@ WORKFLOW_COMMANDS = {
         "area": 'Generate RTL, run DC synthesis, and report area under log/<timestamp>/<chip>/<config>/area. Args: "--chip <chip> [--top <module>]".',
         "power": 'Generate RTL, run chip-owned power simulation, then run PrimeTime PX under log/<timestamp>/<chip>/<config>/power. Args: "--chip <chip> [--top <module>] [--workload <built ELF name>] [--start-ns <ns>] [--end-ns <ns>] [--activity <file> --format <saif|vcd|fsdb>]".',
     },
-    "ip-replace": {
-        "run": 'Replace behavioral IP RTL. Args: "--source-list <file> --output-dir <dir> [--top <module>] [--consumer <dc|yosys>]"',
+    "ip": {
+        "generate": 'Generate SRAM macros from elaborator mems.conf under arch/build/<chip>/<config>. Args: "--chip <chip> [--consumer <dc|yosys>] [--top <module>] [--output-dir <dir>] [--next-topic <topic>]"',
+        "replace": 'Assemble top-scoped synthesis RTL plus SRAM macros under arch/build/<chip>/<config>. Args: "--chip <chip> [--consumer <dc|yosys>] [--top <module>] [--output-dir <dir>] [--next-topic <topic>]"',
     },
     "yosys": {
         "run": 'Run yosys flow. Args: "[--top <top_module>] [--chip <chip>] [--output-dir <dir>] [--log-dir <dir>] [--vcd <file>]"',
@@ -166,8 +167,16 @@ def cleanup_config(config_path: str):
 
 
 def load_host_environment() -> None:
-    """No-op placeholder: host EDA env (TARGET_LIBRARY etc.) comes from the user shell (zshrc)."""
-    return
+    """Import the host login-shell environment used by the EDA tools."""
+    result = subprocess.run(
+        ["zsh", "-lic", "env -0"],
+        check=True,
+        capture_output=True,
+    )
+    for item in result.stdout.split(b"\0"):
+        if item:
+            key, value = item.split(b"=", 1)
+            os.environ[key.decode()] = value.decode()
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -205,10 +214,16 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         group = cmd_parser.add_mutually_exclusive_group(required=True)
         for op_name, op_help in operations.items():
             if op_help is True:
-                group.add_argument(f"--{op_name}", action="store_true", help=f"{op_name.capitalize()}.")
+                group.add_argument(
+                    f"--{op_name}",
+                    dest=op_name,
+                    action="store_true",
+                    help=f"{op_name.capitalize()}.",
+                )
             else:
                 group.add_argument(
                     f"--{op_name}",
+                    dest=op_name,
                     type=str,
                     nargs="?",
                     const="",
@@ -555,7 +570,8 @@ def _submit_and_poll(port: int, api_path: str, cmd_info: dict):
 
     print(f"\nTask completed on http://{HOST}:{port}")
     if task_result and not task_result.get("success", False):
-        print("Error: Task failed")
+        err = task_result.get("error") or task_result
+        print(f"Error: Task failed: {err}")
         return 1
     return 0
 
