@@ -38,6 +38,7 @@ MODEL_LAYOUT = {
     "resnet": "ResNet18",
     "yolo": "YOLO26",
     "bert": "Bert",
+    "bertsmall": "BertSmall",
     "qwen3": "Qwen3",
     "gemma4": "Gemma4",
     "deepseekr1": "DeepSeekR1",
