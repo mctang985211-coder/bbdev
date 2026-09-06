@@ -40,6 +40,7 @@ MODEL_LAYOUT = {
     "bert": "Bert",
     "distilbert": "DistilBert",
     "berttiny": "BertTiny",
+    "bertmini": "BertMini",
     "qwen3": "Qwen3",
     "gemma4": "Gemma4",
     "deepseekr1": "DeepSeekR1",
