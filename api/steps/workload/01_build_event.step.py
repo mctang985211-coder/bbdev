@@ -47,6 +47,7 @@ MODEL_LAYOUT = {
     "stable-diffusion": "StableDiffusion",
     "whisper": "Whisper",
     "buddynext": "BuddyNext",
+    "pythia": "Pythia",
 }
 
 
