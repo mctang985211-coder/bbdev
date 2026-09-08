@@ -48,6 +48,7 @@ MODEL_LAYOUT = {
     "whisper": "Whisper",
     "buddynext": "BuddyNext",
     "pythia": "Pythia",
+    "smollm": "SmolLM",
 }
 
 
