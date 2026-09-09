@@ -49,6 +49,7 @@ MODEL_LAYOUT = {
     "buddynext": "BuddyNext",
     "pythia": "Pythia",
     "smollm": "SmolLM",
+    "smollm2": "SmolLM2",
 }
 
 
